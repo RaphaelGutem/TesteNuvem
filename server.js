@@ -2,17 +2,19 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const mysql = require("mysql2");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexão MySQL
+// Conexão MySQL Railway
 const db = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    password: "2312", // coloque sua senha
-    database: "ecoplay" // coloque o nome do seu banco
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
 
 // ---------------------- CADASTRO ----------------------
@@ -97,6 +99,8 @@ app.get("/api/get-points/:id", (req, res) => {
     });
 });
 
-app.listen(3000, () =>
-    console.log("Servidor rodando em http://localhost:3000")
+// Railway exige usar PORT da env
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =>
+    console.log(`Servidor rodando na porta ${PORT}`)
 );

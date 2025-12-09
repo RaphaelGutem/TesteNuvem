@@ -1,19 +1,16 @@
-const mysql = require("mysql2");
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "2312",
-    database: "ecoplay"
+dotenv.config();
+
+const db = await mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 });
 
-db.connect((err) => {
-    if (err) {
-        console.log("Erro ao conectar ao MySQL:", err);
-        return;
-    }
-    console.log("Conectado ao MySQL!");
-});
+console.log(" Conectado ao MySQL da Railway!");
 
-module.exports = db;
-
+export default db;
