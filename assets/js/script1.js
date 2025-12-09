@@ -245,5 +245,34 @@
         setupAuth();
         ensureToastRoot();
     });
+/* ------------------ ANIMAÇÃO DOS NÚMEROS ------------------ */
+function animateNumbers() {
+    const numbers = document.querySelectorAll(".number");
+
+    numbers.forEach(num => {
+        const target = +num.getAttribute("data-target");
+        const speed = 50; // velocidade da animação
+
+        const update = () => {
+            const current = +num.innerText;
+            const increment = Math.ceil(target / speed);
+
+            if (current < target) {
+                num.innerText = current + increment;
+                requestAnimationFrame(update);
+            } else {
+                num.innerText = target;
+            }
+        };
+
+        update();
+    });
+}
+
+/* Rodar a animação assim que a página carregar */
+onReady(() => {
+    animateNumbers();
+});
+
 
 })();
