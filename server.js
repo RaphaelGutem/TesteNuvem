@@ -1,14 +1,20 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const mysql = require("mysql2");
 require("dotenv").config();
 
 const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Conexão MySQL Railway
+// Servir front
+app.use(express.static(path.join(__dirname, "public")));
+
+// Conexão MySQL
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -17,7 +23,7 @@ const db = mysql.createPool({
     port: process.env.DB_PORT
 });
 
-// ---------------------- CADASTRO ----------------------
+// ---------------- CADASTRO ----------------
 app.post("/api/register", (req, res) => {
     const { name, email, password } = req.body;
 
@@ -38,7 +44,7 @@ app.post("/api/register", (req, res) => {
     });
 });
 
-// ---------------------- LOGIN ----------------------
+// ---------------- LOGIN ----------------
 app.post("/api/login", (req, res) => {
     const { email, password } = req.body;
 
@@ -70,7 +76,7 @@ app.post("/api/login", (req, res) => {
     });
 });
 
-// ---------------------- SALVAR PONTOS ----------------------
+// ---------------- SALVAR PONTOS ----------------
 app.post("/api/save-points", (req, res) => {
     const { userId, points } = req.body;
 
@@ -85,7 +91,7 @@ app.post("/api/save-points", (req, res) => {
     });
 });
 
-// ---------------------- PEGAR PONTOS ----------------------
+// ---------------- PEGAR PONTOS ----------------
 app.get("/api/get-points/:id", (req, res) => {
     const userId = req.params.id;
 
@@ -99,8 +105,11 @@ app.get("/api/get-points/:id", (req, res) => {
     });
 });
 
-// Railway exige usar PORT da env
+// Rota principal para SPA/landing
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// Porta Railway
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-    console.log(`Servidor rodando na porta ${PORT}`)
-);
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
