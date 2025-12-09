@@ -105,10 +105,11 @@ app.get("/api/get-points/:id", (req, res) => {
     });
 });
 
-// Rota principal para SPA/landing
-app.get("*", (req, res) => {
+// Rota catch-all para qualquer página
+app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
 
 // Porta Railway
 const PORT = process.env.PORT || 3000;
